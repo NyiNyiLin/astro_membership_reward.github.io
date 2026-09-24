@@ -1,1 +1,295 @@
-Hello World
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Learn how to earn points and discover the benefits available at each rewards membership tier.">
+    <meta name="theme-color" content="#f5f5f5">
+    <title>Membership Rewards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --page: #f5f5f5;
+        --ink: #000;
+        --heading: #070707;
+        --muted: #2d2d2d;
+        --line: #e4e4e4;
+        --purple: #b85cf4;
+        --radius: 24px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        background: var(--page);
+        color: var(--ink);
+        font-family: "Lato", Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--page);
+      }
+
+      main {
+        width: min(100% - 40px, 700px);
+        margin-inline: auto;
+        padding: 14px 0 26px;
+      }
+
+      section + section { margin-top: 7px; }
+
+      h1,
+      h2 {
+        margin: 0 0 7px;
+        color: var(--heading);
+        font-family: "Poppins", Arial, sans-serif;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.45px;
+        line-height: 1.25;
+      }
+
+      p {
+        margin: 0 0 8px;
+        font-size: 14px;
+      }
+
+      .points-table-wrap {
+        margin-top: 7px;
+        overflow: hidden;
+        border-radius: 15px;
+        background: #e7e7e7;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.25;
+      }
+
+      th,
+      td {
+        padding: 5px 16px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: var(--purple);
+        color: #fff;
+        font-weight: 400;
+      }
+
+      tbody tr:nth-child(even) { background: #f3f3f3; }
+      tbody tr:nth-child(3) { background: #d6d6d6; }
+
+      .note {
+        margin: 5px 0 16px;
+        padding-left: 24px;
+        color: #bdbdbd;
+        font-size: 12px;
+      }
+
+      .tier-intro { margin-bottom: 9px; }
+
+      .tier-list {
+        display: grid;
+        gap: 7px;
+      }
+
+      .tier-card {
+        padding: 16px 18px 12px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.55);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
+      }
+
+      .tier-heading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .tier-name {
+        margin: 0;
+        font-family: "Poppins", Arial, sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .tier-points {
+        margin-left: auto;
+        font-family: "Poppins", Arial, sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        white-space: nowrap;
+      }
+
+      .tier-badge {
+        display: grid;
+        width: 24px;
+        height: 24px;
+        flex: 0 0 24px;
+        place-items: center;
+        clip-path: polygon(50% 0, 71% 11%, 92% 23%, 94% 47%, 92% 73%, 71% 87%, 50% 100%, 29% 87%, 8% 73%, 6% 47%, 8% 23%, 29% 11%);
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 14px;
+        line-height: 1;
+      }
+
+      .bronze .tier-badge { background: #cc7b51; }
+      .silver .tier-badge { background: #aaa9c8; }
+      .gold .tier-badge { background: #cdb66f; }
+
+      .tier-benefits-title {
+        margin: 0 0 3px;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .benefits {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: 14px;
+      }
+
+      .benefits li {
+        position: relative;
+        padding-left: 25px;
+        line-height: 1.5;
+      }
+
+      .benefits li::before {
+        position: absolute;
+        top: -1px;
+        left: 2px;
+        content: "✓";
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      .expiry-note {
+        margin: 8px 0 0;
+        padding-left: 12px;
+        color: #bdbdbd;
+        font-size: 12px;
+      }
+
+      .points-table-wrap:focus-visible {
+        outline: 3px solid #6b24a3;
+        outline-offset: 3px;
+      }
+
+      @media (min-width: 600px) {
+        main { padding-block: 30px 40px; }
+        section + section { margin-top: 20px; }
+
+        .tier-list {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          align-items: stretch;
+          gap: 14px;
+        }
+
+        .tier-card { padding: 18px; }
+
+        .tier-heading {
+          flex-wrap: wrap;
+          align-content: flex-start;
+          margin-bottom: 13px;
+        }
+
+        .tier-points {
+          width: 100%;
+          margin: 0 0 0 32px;
+        }
+      }
+
+      @media (min-width: 960px) {
+        main { width: min(100% - 64px, 920px); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section aria-labelledby="welcome-title">
+        <h1 id="welcome-title">Welcome to Rewards</h1>
+        <p>Earn points as you explore, interact and enjoy listening to your favourite station live. The more points you collect, the more rewards and perks you can unlock.</p>
+      </section>
+
+      <section aria-labelledby="earn-title">
+        <h2 id="earn-title">How to Earn Points</h2>
+        <p>From daily check-ins to joining contests and listening to radio, every action brings you closer to your next reward. Complete simple interactions in the app to boost your points balance.</p>
+
+        <div class="points-table-wrap" role="region" aria-label="Points earned by action" tabindex="0">
+          <table>
+            <thead>
+              <tr><th scope="col">Actions</th><th scope="col">Points</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Poll Interaction</td><td>10 points</td></tr>
+              <tr><td>Chart Interaction</td><td>10 points</td></tr>
+              <tr><td>Contest Participation</td><td>10 points</td></tr>
+              <tr><td>Radio Listen</td><td>1 min listened = 1 point<br>*Capped at 100 points</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note">*Points and rewards may change at the brand's discretion.</p>
+      </section>
+
+      <section aria-labelledby="tiers-title">
+        <h2 id="tiers-title">About Tiers</h2>
+        <p class="tier-intro">Move up the tiers as you collect more points. Higher tiers may enjoy exclusive rewards, priority access and more exciting perks. Keep earning to unlock more.</p>
+
+        <div class="tier-list">
+          <article class="tier-card bronze">
+            <div class="tier-heading">
+              <span class="tier-badge" aria-hidden="true">★</span>
+              <h3 class="tier-name">Bronze</h3>
+              <span class="tier-points">0 – 1,999 pts</span>
+            </div>
+            <h4 class="tier-benefits-title">Benefits</h4>
+            <ul class="benefits"><li>Basic Contests</li><li>Poll Interaction</li><li>Chart Interaction</li></ul>
+          </article>
+
+          <article class="tier-card silver">
+            <div class="tier-heading">
+              <span class="tier-badge" aria-hidden="true">★</span>
+              <h3 class="tier-name">Silver</h3>
+              <span class="tier-points">2,000 – 9,999 pts</span>
+            </div>
+            <h4 class="tier-benefits-title">Benefits</h4>
+            <ul class="benefits"><li>Basic Contests</li><li>Tier 2 Contests</li><li>Poll Interaction</li><li>Chart Interaction</li></ul>
+          </article>
+
+          <article class="tier-card gold">
+            <div class="tier-heading">
+              <span class="tier-badge" aria-hidden="true">★</span>
+              <h3 class="tier-name">Gold</h3>
+              <span class="tier-points">10,000+ pts</span>
+            </div>
+            <h4 class="tier-benefits-title">Benefits</h4>
+            <ul class="benefits"><li>Basic Contests</li><li>Tier 2 Contests</li><li>Tier 1 Contests</li><li>Poll Interaction</li><li>Chart Interaction</li><li>Priority Registrations/ Submissions</li></ul>
+          </article>
+        </div>
+        <p class="expiry-note">*Points will reset yearly based on first interaction with rewards.</p>
+      </section>
+    </main>
+  </body>
+</html>
