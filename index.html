@@ -6,6 +6,57 @@
     <meta name="description" content="Learn how to earn points and discover the benefits available at each rewards membership tier.">
     <meta name="theme-color" content="#f5f5f5">
     <title>Membership Rewards</title>
+    <script>
+      (() => {
+        const allowedThemes = new Set(["light", "dark"]);
+        const apps = {
+          era: { label: "ERA", color: "#44A82E" },
+          hitz: { label: "HITZ", color: "#B161F7" },
+          myfm: { label: "MY FM", color: "#E5391F" },
+          my: { label: "MY", color: "#E5391F" },
+          mix: { label: "MIX", color: "#00AAB0" },
+          gegar: { label: "GEGAR", color: "#009DDC" },
+          goxuan: { label: "GOXUAN", color: "#FF4D00" },
+          lite: { label: "LITE", color: "#00B7FA" },
+          melody: { label: "MELODY", color: "#CF128C" },
+          raaga: { label: "RAAGA", color: "#B91F2E" },
+          sinar: { label: "SINAR", color: "#0DAAAA" },
+          zayan: { label: "ZAYAN", color: "#B633B4" },
+          syok: { label: "SYOK", color: "#F40931" }
+        };
+
+        function applyRewardsView(next = {}) {
+          const theme = allowedThemes.has(next.theme) ? next.theme : "light";
+          const app = Object.hasOwn(apps, next.app) ? next.app : "hitz";
+          const root = document.documentElement;
+
+          root.dataset.theme = theme;
+          root.dataset.app = app;
+          root.style.setProperty("--brand", apps[app].color);
+          document.title = `${apps[app].label} Rewards`;
+
+          const themeMeta = document.querySelector('meta[name="theme-color"]');
+          if (themeMeta) themeMeta.content = theme === "dark" ? "#252525" : "#f5f5f5";
+
+          const appName = document.querySelector("[data-app-name]");
+          if (appName) appName.textContent = `${apps[app].label} Rewards`;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        window.setRewardsView = applyRewardsView;
+        applyRewardsView({
+          theme: params.get("theme") || "light",
+          app: (params.get("app") || "hitz").toLowerCase()
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+          applyRewardsView({
+            theme: document.documentElement.dataset.theme,
+            app: document.documentElement.dataset.app
+          });
+        });
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
@@ -16,8 +67,45 @@
         --heading: #070707;
         --muted: #2d2d2d;
         --line: #e4e4e4;
-        --purple: #b85cf4;
+        --brand: #252525;
+        --card: rgba(255, 255, 255, 0.55);
+        --row: #e7e7e7;
+        --row-alt: #f3f3f3;
+        --row-emphasis: #dbdbdb;
+        --note: #bdbdbd;
+        --table-header-text: #fff;
+        --tier-text: #000;
         --radius: 24px;
+      }
+
+      html[data-app="era"] { --brand: #44a82e; }
+      html[data-app="hitz"] { --brand: #b161f7; }
+      html[data-app="myfm"],
+      html[data-app="my"] { --brand: #e5391f; }
+      html[data-app="mix"] { --brand: #00aab0; }
+      html[data-app="gegar"] { --brand: #009ddc; }
+      html[data-app="goxuan"] { --brand: #ff4d00; }
+      html[data-app="lite"] { --brand: #00b7fa; }
+      html[data-app="melody"] { --brand: #cf128c; }
+      html[data-app="raaga"] { --brand: #b91f2e; }
+      html[data-app="sinar"] { --brand: #0daaaa; }
+      html[data-app="zayan"] { --brand: #b633b4; }
+      html[data-app="syok"] { --brand: #f40931; }
+
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --page: #252525;
+        --ink: rgba(255, 255, 255, 0.87);
+        --heading: rgba(255, 255, 255, 0.87);
+        --muted: rgba(255, 255, 255, 0.87);
+        --line: #4c4c4c;
+        --card: #303030;
+        --row: #393939;
+        --row-alt: #454545;
+        --row-emphasis: #2e2e2e;
+        --note: rgba(255, 255, 255, 0.6);
+        --table-header-text: #f5f5f5;
+        --tier-text: rgba(255, 255, 255, 0.6);
       }
 
       * { box-sizing: border-box; }
@@ -64,7 +152,7 @@
         margin-top: 7px;
         overflow: hidden;
         border-radius: 15px;
-        background: #e7e7e7;
+        background: var(--row);
       }
 
       table {
@@ -84,18 +172,19 @@
       }
 
       th {
-        background: var(--purple);
-        color: #fff;
+        background: var(--brand);
+        color: var(--table-header-text);
         font-weight: 400;
       }
 
-      tbody tr:nth-child(even) { background: #f3f3f3; }
-      tbody tr:nth-child(3) { background: #d6d6d6; }
+      tbody tr:nth-child(even) { background: var(--row-alt); }
+      tbody tr:nth-child(1),
+      tbody tr:nth-child(3) { background: var(--row-emphasis); }
 
       .note {
         margin: 5px 0 16px;
         padding-left: 24px;
-        color: #bdbdbd;
+        color: var(--note);
         font-size: 12px;
       }
 
@@ -110,7 +199,7 @@
         padding: 16px 18px 12px;
         border: 1px solid var(--line);
         border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.55);
+        background: var(--card);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
       }
 
@@ -138,20 +227,11 @@
       }
 
       .tier-badge {
-        display: grid;
-        width: 24px;
-        height: 24px;
-        flex: 0 0 24px;
-        place-items: center;
-        clip-path: polygon(50% 0, 71% 11%, 92% 23%, 94% 47%, 92% 73%, 71% 87%, 50% 100%, 29% 87%, 8% 73%, 6% 47%, 8% 23%, 29% 11%);
-        color: rgba(255, 255, 255, 0.75);
-        font-size: 14px;
-        line-height: 1;
+        display: block;
+        width: 23px;
+        height: 26px;
+        flex: 0 0 23px;
       }
-
-      .bronze .tier-badge { background: #cc7b51; }
-      .silver .tier-badge { background: #aaa9c8; }
-      .gold .tier-badge { background: #cdb66f; }
 
       .tier-benefits-title {
         margin: 0 0 3px;
@@ -162,6 +242,7 @@
       .benefits {
         margin: 0;
         padding: 0;
+        color: var(--tier-text);
         list-style: none;
         font-size: 14px;
       }
@@ -174,17 +255,20 @@
 
       .benefits li::before {
         position: absolute;
-        top: -1px;
+        top: 4px;
         left: 2px;
-        content: "✓";
-        font-size: 18px;
-        line-height: 1;
+        width: 12px;
+        height: 12px;
+        background-color: currentColor;
+        content: "";
+        -webkit-mask: url("assets/icons/tip.svg") center / contain no-repeat;
+        mask: url("assets/icons/tip.svg") center / contain no-repeat;
       }
 
       .expiry-note {
         margin: 8px 0 0;
         padding-left: 12px;
-        color: #bdbdbd;
+        color: var(--note);
         font-size: 12px;
       }
 
@@ -229,7 +313,7 @@
   <body>
     <main>
       <section aria-labelledby="welcome-title">
-        <h1 id="welcome-title">Welcome to Rewards</h1>
+        <h1 id="welcome-title">Welcome to <span data-app-name>HITZ Rewards</span></h1>
         <p>Earn points as you explore, interact and enjoy listening to your favourite station live. The more points you collect, the more rewards and perks you can unlock.</p>
       </section>
 
@@ -260,7 +344,7 @@
         <div class="tier-list">
           <article class="tier-card bronze">
             <div class="tier-heading">
-              <span class="tier-badge" aria-hidden="true">★</span>
+              <img class="tier-badge" src="assets/icons/bronze.svg" width="23" height="26" alt="">
               <h3 class="tier-name">Bronze</h3>
               <span class="tier-points">0 – 1,999 pts</span>
             </div>
@@ -270,7 +354,7 @@
 
           <article class="tier-card silver">
             <div class="tier-heading">
-              <span class="tier-badge" aria-hidden="true">★</span>
+              <img class="tier-badge" src="assets/icons/silver.svg" width="23" height="26" alt="">
               <h3 class="tier-name">Silver</h3>
               <span class="tier-points">2,000 – 9,999 pts</span>
             </div>
@@ -280,7 +364,7 @@
 
           <article class="tier-card gold">
             <div class="tier-heading">
-              <span class="tier-badge" aria-hidden="true">★</span>
+              <img class="tier-badge" src="assets/icons/gold.svg" width="23" height="26" alt="">
               <h3 class="tier-name">Gold</h3>
               <span class="tier-points">10,000+ pts</span>
             </div>
